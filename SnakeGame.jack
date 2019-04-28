@@ -1,0 +1,10 @@
+class SnakeGame {
+
+	constructor SnakeGame new() {
+		return this;
+	} 
+
+	method void start() {
+		return;
+	}
+}
