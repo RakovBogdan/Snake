@@ -1,6 +1,46 @@
 class Snake {
 	
-	constructor Snake new() {
+	field SnakePart head, tail;
+	field int snakeWidth;
+	field int snakeLength;
+
+	constructor Snake new(int length, int width) {
+		let snakeWidth = width;
+		let snakeLength = length;
+		do createSnake();
+		return this;
+	}
+
+	method void createSnake() {
+		var int partsToDraw;
+		var int partXAxisIncrement;
+		let partsToDraw = snakeLength - 1;
+		let head = SnakePart.new(0, 0, snakeWidth);
+		let tail = head;
+		let partXAxisIncrement = snakeWidth;
 		
+		while(~(partsToDraw = 0)) {
+			do head.setNext(SnakePart.new(partXAxisIncrement, 0, snakeWidth));
+			let head = head.getNext();
+			let partsToDraw = partsToDraw - 1;
+			let partXAxisIncrement = partXAxisIncrement + snakeWidth;
+		}
+
+		return;
+	}
+
+	method void moveRight() {
+		return;
+	}
+
+	method void dispose() {
+		var SnakePart tailsNext;
+		while (~(tail = null)) {
+			let tailsNext = tail.getNext();
+			do tail.dispose();
+			let tail = tailsNext;
+		}
+		do Memory.deAlloc(this);
+		return;
 	}
 }

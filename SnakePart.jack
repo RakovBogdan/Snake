@@ -1,0 +1,42 @@
+class SnakePart {
+
+	field int x, y, size;
+	field SnakePart nextPart;
+
+	constructor SnakePart new(int xAxis, int yAxis, int partSize) {
+		let x = xAxis;
+		let y = yAxis;
+		let size = partSize;
+		do drawPart();
+		return this;
+	}
+
+	method void drawPart() {
+		do Screen.setColor(true);
+		do Screen.drawRectangle(x, y, x + size, y + size);
+		do Screen.setColor(false);
+
+		return;
+	}
+
+	method void setNext(SnakePart snakePart) {
+		let nextPart = snakePart;
+		return;
+	}
+
+	method SnakePart getNext() {
+		return nextPart;
+	}
+
+	method void dispose() {
+		do clearPartFromScreen();
+		do Memory.deAlloc(this);
+		return;
+	}
+
+	method void clearPartFromScreen() {
+		do Screen.setColor(false);
+		do Screen.drawRectangle(x, y, x + size, y + size);
+		return;
+	}
+}
