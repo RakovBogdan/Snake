@@ -1,21 +1,111 @@
 class SnakeGame {
 
+	static int exitButton; //'q' button
+	static int leftButton;
+	static int rightButton;
+	static int upButton;
+	static int downButton;
+	static int left;
+	static int right;
+	static int up;
+	static int down;
 	field Snake snake;
-	field int exitButton; //'q' button
+	field int direction;
 
 	constructor SnakeGame new() {
-		let snake = Snake.new(5, 10);
 		let exitButton = 81;
+		let leftButton = 130;
+		let upButton = 131;
+		let rightButton = 132;
+		let downButton = 133;
+		let left = 1;
+		let up = 2;
+		let right = 3;
+		let down = 4;
+
+		let snake = Snake.new(5, 10);
+		let direction = right;
 		return this;
 	} 
 
 	method void start() {
 		var int currentKeyPressed;
-		while (~(currentKeyPressed = exitButton)) {
+		var boolean exit;
+
+		let exit = false;
+
+		while (~(exit)) {
+			do moveSnake();
+
 			let currentKeyPressed = Keyboard.keyPressed();
+			if (currentKeyPressed = exitButton) {
+				let exit = true;
+			}
+			do readDirection(currentKeyPressed);
+			let exit = checkSnakeNotInMargins();
 		}
 
+		return;
+	}
+
+	method void moveSnake() {
+		if (direction = left) {
+			do snake.moveLeft();
+		}  
+		if (direction = right) {
+			do snake.moveRight();
+		} 
+		if (direction = up) {
+			do snake.moveUp();
+		}
+		if (direction = down) {
+			do snake.moveDown();
+		}
+		do Sys.wait(100);
+		return;
+	}
+
+	method boolean checkSnakeNotInMargins() {
+		var int width;
+		var SnakePart head;
+		var int headX;
+		var int headY;
+		var boolean isNotInMargin;
+
+		let head = snake.getHead();
+		let width = snake.getSnakeWidth();
+		let headX = head.getX();
+		let headY = head.getY();
 		
+		if (direction = right) {
+			let isNotInMargin = (headX + width + width) > 511;
+		}
+		if (direction = left) {
+			let isNotInMargin = (headX - width) < 0;
+		}
+		if (direction = up) {
+			let isNotInMargin = (headY - width) < 0;
+		}
+		if (direction = down) {
+			let isNotInMargin = (headY + width + width) > 255;
+		}
+
+		return isNotInMargin;
+	} 
+
+	method void readDirection(int currentKeyPressed) {
+		if ((currentKeyPressed = leftButton) & ~(direction = right)) {
+			let direction = left;
+		}
+		if ((currentKeyPressed = upButton) & ~(direction = down)) {
+			let direction = up;
+		}
+		if ((currentKeyPressed = rightButton) & ~(direction = left)) {
+			let direction = right;
+		}
+		if ((currentKeyPressed = downButton) & ~(direction = up)) {
+			let direction = down;
+		}
 		return;
 	}
 

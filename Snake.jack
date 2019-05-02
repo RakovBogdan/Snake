@@ -14,8 +14,8 @@ class Snake {
 	method void createSnake() {
 		var int partsToDraw;
 		var int partXAxisIncrement;
-		let partsToDraw = snakeLength - 1;
 		let head = SnakePart.new(0, 0, snakeWidth);
+		let partsToDraw = snakeLength - 1;
 		let tail = head;
 		let partXAxisIncrement = snakeWidth;
 		
@@ -29,7 +29,51 @@ class Snake {
 		return;
 	}
 
+	method SnakePart getHead() {
+		return head;
+	}
+
+	method int getSnakeWidth() {
+		return snakeWidth;
+	}
+
 	method void moveRight() {
+		do removeTail();
+		
+		do head.setNext(SnakePart.new(head.getX() + snakeWidth, head.getY(), snakeWidth));
+		let head = head.getNext(); 
+		return;
+	}
+
+	method void moveLeft() {
+		do removeTail();
+		
+		do head.setNext(SnakePart.new(head.getX() - snakeWidth, head.getY(), snakeWidth));
+		let head = head.getNext(); 
+		return;
+	}
+
+	method void moveUp() {
+		do removeTail();
+		
+		do head.setNext(SnakePart.new(head.getX(), head.getY() - snakeWidth, snakeWidth));
+		let head = head.getNext(); 
+		return;
+	}
+
+	method void moveDown() {
+		do removeTail();
+		
+		do head.setNext(SnakePart.new(head.getX(), head.getY() + snakeWidth, snakeWidth));
+		let head = head.getNext(); 
+		return;
+	}
+
+	method void removeTail() {
+		var SnakePart tailToRemove;
+		let tailToRemove = tail;
+		let tail = tail.getNext();
+		do tailToRemove.dispose();
 		return;
 	}
 

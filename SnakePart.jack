@@ -28,6 +28,14 @@ class SnakePart {
 		return nextPart;
 	}
 
+	method int getX() {
+		return x;
+	}
+
+	method int getY() {
+		return y;
+	}
+
 	method void dispose() {
 		do clearPartFromScreen();
 		do Memory.deAlloc(this);
