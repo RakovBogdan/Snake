@@ -13,7 +13,7 @@ class SnakePart {
 
 	method void drawPart() {
 		do Screen.setColor(true);
-		do Screen.drawRectangle(x, y, x + size, y + size);
+		do Screen.drawRectangle(x, y, x + size - 1, y + size - 1);
 		do Screen.setColor(false);
 
 		return;
@@ -44,7 +44,7 @@ class SnakePart {
 
 	method void clearPartFromScreen() {
 		do Screen.setColor(false);
-		do Screen.drawRectangle(x, y, x + size, y + size);
+		do Screen.drawRectangle(x, y, x + size - 1, y + size - 1);
 		return;
 	}
 }

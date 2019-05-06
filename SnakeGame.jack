@@ -1,5 +1,7 @@
 class SnakeGame {
 
+	static int xPixelSize;
+	static int yPixelSize;
 	static int exitButton; //'q' button
 	static int leftButton;
 	static int rightButton;
@@ -9,10 +11,16 @@ class SnakeGame {
 	static int right;
 	static int up;
 	static int down;
+
 	field Snake snake;
 	field int direction;
+	field Array grid;
 
 	constructor SnakeGame new() {
+		var int snakeLength;
+		var int snakeWidth;
+		let yPixelSize = 256;
+		let xPixelSize = 512;
 		let exitButton = 81;
 		let leftButton = 130;
 		let upButton = 131;
@@ -23,10 +31,38 @@ class SnakeGame {
 		let right = 3;
 		let down = 4;
 
-		let snake = Snake.new(5, 10);
+		let snakeLength = 5;
+		let snakeWidth = 8;
+		do initializeGrid(snakeWidth);
+		let snake = Snake.new(snakeLength, snakeWidth);
 		let direction = right;
 		return this;
 	} 
+
+	method void initializeGrid(int snakeWidth) {
+		var int xGridLength;
+		var int yGridLength;
+		var int yGridIndex;
+		var int xGridIndex;
+		var Array xGridRow;
+		let xGridLength = xPixelSize / snakeWidth;
+		let yGridLength = yPixelSize / snakeWidth;
+		let grid = Array.new(yGridLength);
+
+		let yGridIndex = 0;
+		while (yGridIndex < yGridLength) {
+			let xGridRow = Array.new(xGridLength);
+			let xGridIndex = 0;
+			while (xGridIndex < xGridLength) {
+				let xGridRow[xGridIndex] = false;
+				let xGridIndex = xGridIndex + 1; 
+			}
+			let grid[yGridIndex] = xGridRow;
+			let yGridIndex = yGridIndex + 1;
+		}
+
+		return;
+	}
 
 	method void start() {
 		var int currentKeyPressed;
@@ -78,7 +114,7 @@ class SnakeGame {
 		let headY = head.getY();
 		
 		if (direction = right) {
-			let isNotInMargin = (headX + width + width) > 511;
+			let isNotInMargin = (headX + width + width - 1) > 511;
 		}
 		if (direction = left) {
 			let isNotInMargin = (headX - width) < 0;
@@ -87,7 +123,7 @@ class SnakeGame {
 			let isNotInMargin = (headY - width) < 0;
 		}
 		if (direction = down) {
-			let isNotInMargin = (headY + width + width) > 255;
+			let isNotInMargin = (headY + width + width - 1) > 255;
 		}
 
 		return isNotInMargin;
