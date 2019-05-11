@@ -1,0 +1,77 @@
+class Grid {
+	static int xPixelSize;
+	static int yPixelSize;
+	field Array grid;
+	field int xGridLength;
+	field int yGridLength;
+	field int gridBlockWidth;
+
+	constructor Grid new(int blockWidth) {
+		let xPixelSize = 512;
+		let yPixelSize = 256;
+		let gridBlockWidth = blockWidth;
+		do initializeGrid();
+		return this;
+	}
+
+	method void initializeGrid() {
+		var int yGridIndex;
+		var int xGridIndex;
+		var Array xGridRow;
+		let xGridLength = xPixelSize / gridBlockWidth;
+		let yGridLength = yPixelSize / gridBlockWidth;
+		let grid = Array.new(yGridLength);
+
+		let yGridIndex = 0;
+		while (yGridIndex < yGridLength) {
+			let xGridRow = Array.new(xGridLength);
+			let xGridIndex = 0;
+			while (xGridIndex < xGridLength) {
+				let xGridRow[xGridIndex] = false;
+				let xGridIndex = xGridIndex + 1; 
+			}
+			let grid[yGridIndex] = xGridRow;
+			let yGridIndex = yGridIndex + 1;
+		}
+
+		return;
+	}
+
+	method boolean isCoordinateInGrid(int xGridIndex, int yGridIndex) {
+		return (xGridIndex > ((-1)) & (xGridIndex < xGridLength) &
+		 		(yGridIndex > ((-1)) & (yGridIndex < yGridLength)));
+	}
+
+	method void drawBlock(int xGridIndex, int yGridIndex) {
+		var int xCoordinate;
+		var int yCoordinate;
+		let xCoordinate = gridBlockWidth * xGridIndex;
+		let yCoordinate = gridBlockWidth * yGridIndex;
+		
+		do Screen.setColor(true);
+		do Screen.drawRectangle(xCoordinate, yCoordinate,
+								xCoordinate + gridBlockWidth - 1,
+								yCoordinate + gridBlockWidth - 1);
+		do Screen.setColor(false);
+		return;
+	}
+
+	method void eraseBlock(int xGridIndex, int yGridIndex) {
+		var int xCoordinate;
+		var int yCoordinate;
+		let xCoordinate = gridBlockWidth * xGridIndex;
+		let yCoordinate = gridBlockWidth * yGridIndex;
+		
+		do Screen.setColor(false);
+		do Screen.drawRectangle(xCoordinate, yCoordinate,
+								xCoordinate + gridBlockWidth - 1,
+								yCoordinate + gridBlockWidth - 1);
+		return;
+	}
+
+	method void dispose() {
+		do Memory.deAlloc(grid);
+		do Memory.deAlloc(this);
+		return;
+	}
+}

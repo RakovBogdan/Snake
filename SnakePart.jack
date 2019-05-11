@@ -1,22 +1,12 @@
 class SnakePart {
 
-	field int x, y, size;
+	field int xGridIndex, yGridIndex;
 	field SnakePart nextPart;
 
-	constructor SnakePart new(int xAxis, int yAxis, int partSize) {
-		let x = xAxis;
-		let y = yAxis;
-		let size = partSize;
-		do drawPart();
+	constructor SnakePart new(int xIndex, int yIndex) {
+		let xGridIndex = xIndex;
+		let yGridIndex = yIndex;
 		return this;
-	}
-
-	method void drawPart() {
-		do Screen.setColor(true);
-		do Screen.drawRectangle(x, y, x + size - 1, y + size - 1);
-		do Screen.setColor(false);
-
-		return;
 	}
 
 	method void setNext(SnakePart snakePart) {
@@ -28,23 +18,16 @@ class SnakePart {
 		return nextPart;
 	}
 
-	method int getX() {
-		return x;
+	method int getXIndex() {
+		return xGridIndex;
 	}
 
-	method int getY() {
-		return y;
+	method int getYIndex() {
+		return yGridIndex;
 	}
 
 	method void dispose() {
-		do clearPartFromScreen();
 		do Memory.deAlloc(this);
-		return;
-	}
-
-	method void clearPartFromScreen() {
-		do Screen.setColor(false);
-		do Screen.drawRectangle(x, y, x + size - 1, y + size - 1);
 		return;
 	}
 }

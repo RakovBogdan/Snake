@@ -1,46 +1,46 @@
 class Snake {
 	
+	field Grid grid;
 	field SnakePart head, tail;
-	field int snakeWidth;
 	field int snakeLength;
 
 	constructor Snake new(int length, int width) {
-		let snakeWidth = width;
+		let grid = Grid.new(width);
 		let snakeLength = length;
 		do createSnake();
 		return this;
 	}
 
 	method void createSnake() {
-		var int partsToDraw;
-		var int partXAxisIncrement;
-		let head = SnakePart.new(0, 0, snakeWidth);
-		let partsToDraw = snakeLength - 1;
+		var int partsCreated;
+		let head = SnakePart.new(0, 0);
+		do grid.drawBlock(0, 0);
 		let tail = head;
-		let partXAxisIncrement = snakeWidth;
+		let partsCreated = 1;
 		
-		while(~(partsToDraw = 0)) {
-			do head.setNext(SnakePart.new(partXAxisIncrement, 0, snakeWidth));
+		while(partsCreated < snakeLength) {
+			do head.setNext(SnakePart.new(partsCreated, 0));
+			do grid.drawBlock(partsCreated, 0);
 			let head = head.getNext();
-			let partsToDraw = partsToDraw - 1;
-			let partXAxisIncrement = partXAxisIncrement + snakeWidth;
+			let partsCreated = partsCreated + 1;
 		}
 
 		return;
+	}
+
+	method Grid getGrid() {
+		return grid;
 	}
 
 	method SnakePart getHead() {
 		return head;
 	}
 
-	method int getSnakeWidth() {
-		return snakeWidth;
-	}
-
 	method void moveRight() {
 		do removeTail();
 		
-		do head.setNext(SnakePart.new(head.getX() + snakeWidth, head.getY(), snakeWidth));
+		do head.setNext(SnakePart.new(head.getXIndex() + 1, head.getYIndex()));
+		do grid.drawBlock(head.getXIndex() + 1, head.getYIndex());
 		let head = head.getNext(); 
 		return;
 	}
@@ -48,7 +48,8 @@ class Snake {
 	method void moveLeft() {
 		do removeTail();
 		
-		do head.setNext(SnakePart.new(head.getX() - snakeWidth, head.getY(), snakeWidth));
+		do head.setNext(SnakePart.new(head.getXIndex() - 1, head.getYIndex()));
+		do grid.drawBlock(head.getXIndex() - 1, head.getYIndex());
 		let head = head.getNext(); 
 		return;
 	}
@@ -56,7 +57,8 @@ class Snake {
 	method void moveUp() {
 		do removeTail();
 		
-		do head.setNext(SnakePart.new(head.getX(), head.getY() - snakeWidth, snakeWidth));
+		do head.setNext(SnakePart.new(head.getXIndex(), head.getYIndex() - 1));
+		do grid.drawBlock(head.getXIndex(), head.getYIndex() - 1);
 		let head = head.getNext(); 
 		return;
 	}
@@ -64,7 +66,8 @@ class Snake {
 	method void moveDown() {
 		do removeTail();
 		
-		do head.setNext(SnakePart.new(head.getX(), head.getY() + snakeWidth, snakeWidth));
+		do head.setNext(SnakePart.new(head.getXIndex(), head.getYIndex() + 1));
+		do grid.drawBlock(head.getXIndex(), head.getYIndex() + 1);
 		let head = head.getNext(); 
 		return;
 	}
@@ -73,17 +76,16 @@ class Snake {
 		var SnakePart tailToRemove;
 		let tailToRemove = tail;
 		let tail = tail.getNext();
+		do grid.eraseBlock(tailToRemove.getXIndex(), tailToRemove.getYIndex());
 		do tailToRemove.dispose();
 		return;
 	}
 
 	method void dispose() {
-		var SnakePart tailsNext;
 		while (~(tail = null)) {
-			let tailsNext = tail.getNext();
-			do tail.dispose();
-			let tail = tailsNext;
+			do removeTail();
 		}
+		do grid.dispose();
 		do Memory.deAlloc(this);
 		return;
 	}
