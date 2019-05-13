@@ -28,6 +28,10 @@ class Snake {
 		return;
 	}
 
+	method int getLength() {
+		return snakeLength;
+	}
+
 	method Grid getGrid() {
 		return grid;
 	}

@@ -4,6 +4,7 @@ class Grid {
 	field Array grid;
 	field int xGridLength;
 	field int yGridLength;
+	field int size;
 	field int gridBlockWidth;
 
 	constructor Grid new(int blockWidth) {
@@ -20,6 +21,7 @@ class Grid {
 		var Array xGridRow;
 		let xGridLength = xPixelSize / gridBlockWidth;
 		let yGridLength = yPixelSize / gridBlockWidth;
+		let size = xGridLength * yGridLength;
 		let grid = Array.new(yGridLength);
 
 		let yGridIndex = 0;
@@ -37,6 +39,58 @@ class Grid {
 		return;
 	}
 
+	method int getSize() {
+		return size;
+	}
+
+	method boolean isCoordinateEmpty(int x, int y) {
+		var Array xRow;
+		let xRow = grid[y];
+		return xRow[x];
+	}
+
+	method Array drawNextEmptyBlock(int x, int y) {
+		var int yIndex;
+		var int xIndex;
+		var Array xRow;
+		var Array result;
+
+		let result = Array.new(2);
+		let xRow = grid[yIndex];
+		let yIndex = y;
+		let xIndex = x;
+
+		while (yIndex < (yGridLength + y)) {
+			while (xIndex < xGridLength) {
+				if (xRow[xIndex] = false) {
+					let result[0] = xIndex;
+					let result[1] = Utils.mod(yIndex, yGridLength); 
+					do drawBlock(result[0], result[1]);
+					return result;
+				}
+				let xIndex = xIndex + 1;
+			}
+			let yIndex = yIndex + 1;
+			let xRow = grid[Utils.mod(yIndex, yGridLength)];
+			let xIndex = 0; 
+		} 
+
+		return null;
+	}
+
+	method Array getNextBlockAfterSteps(int x, int y, int steps) {
+		var Array xRow;
+		var Array result;
+
+		let result = Array.new(2);
+		let xRow = grid[y];
+		
+		let result[0] = Utils.mod((x + steps), xGridLength);
+		let result[1] = Utils.mod(y + ((x + steps)/xGridLength), yGridLength);
+
+		return result;
+	}
+
 	method boolean isCoordinateInGrid(int xGridIndex, int yGridIndex) {
 		return (xGridIndex > ((-1)) & (xGridIndex < xGridLength) &
 		 		(yGridIndex > ((-1)) & (yGridIndex < yGridLength)));
@@ -45,6 +99,7 @@ class Grid {
 	method void drawBlock(int xGridIndex, int yGridIndex) {
 		var int xCoordinate;
 		var int yCoordinate;
+		var Array xRow;
 		let xCoordinate = gridBlockWidth * xGridIndex;
 		let yCoordinate = gridBlockWidth * yGridIndex;
 		
@@ -52,6 +107,8 @@ class Grid {
 		do Screen.drawRectangle(xCoordinate, yCoordinate,
 								xCoordinate + gridBlockWidth - 1,
 								yCoordinate + gridBlockWidth - 1);
+		let xRow = grid[yCoordinate];
+		let xRow[xCoordinate] = true;
 		do Screen.setColor(false);
 		return;
 	}
@@ -59,6 +116,7 @@ class Grid {
 	method void eraseBlock(int xGridIndex, int yGridIndex) {
 		var int xCoordinate;
 		var int yCoordinate;
+		var Array xRow;
 		let xCoordinate = gridBlockWidth * xGridIndex;
 		let yCoordinate = gridBlockWidth * yGridIndex;
 		
@@ -66,6 +124,8 @@ class Grid {
 		do Screen.drawRectangle(xCoordinate, yCoordinate,
 								xCoordinate + gridBlockWidth - 1,
 								yCoordinate + gridBlockWidth - 1);
+		let xRow = grid[yCoordinate];
+		let xRow[xCoordinate] = true;
 		return;
 	}
 

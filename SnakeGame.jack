@@ -15,6 +15,7 @@ class SnakeGame {
 	field Snake snake;
 	field int direction;
 	field Grid grid;
+	field Array food;
 
 	constructor SnakeGame new() {
 		var int snakeLength;
@@ -57,6 +58,29 @@ class SnakeGame {
 				let exit = true;
 			}
 		}
+
+		do Output.moveCursor(11, 0);
+		do Output.printString("Game over, score: ");
+		do Output.printInt(snake.getLength());
+
+		return;
+	}
+
+	method void generateFoodOnGrid() {
+		var Array foodCoordinates;
+		var int numberOfSteps;
+		let numberOfSteps = LCGRandom.randRange(1, grid.getSize() - snake.getLength());
+		
+		let foodCoordinates = grid.getNextBlockAfterSteps(snake.getHead().getXIndex(),
+			snake.getHead().getYIndex(), numberOfSteps);
+
+		if (~(grid.isCoordinateEmpty(foodCoordinates[0], foodCoordinates[1]))) {
+			let foodCoordinates = drawNextEmptyBlock(foodCoordinates[0], foodCoordinates[1]);
+		} else {
+			do grid.drawBlock(foodCoordinates[0], foodCoordinates[1]);
+		}
+
+		let food = foodCoordinates;
 
 		return;
 	}
