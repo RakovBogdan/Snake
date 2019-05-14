@@ -46,7 +46,7 @@ class Grid {
 	method boolean isCoordinateEmpty(int x, int y) {
 		var Array xRow;
 		let xRow = grid[y];
-		return xRow[x];
+		return ~(xRow[x]);
 	}
 
 	method Array drawNextEmptyBlock(int x, int y) {
@@ -107,8 +107,8 @@ class Grid {
 		do Screen.drawRectangle(xCoordinate, yCoordinate,
 								xCoordinate + gridBlockWidth - 1,
 								yCoordinate + gridBlockWidth - 1);
-		let xRow = grid[yCoordinate];
-		let xRow[xCoordinate] = true;
+		let xRow = grid[yGridIndex];
+		let xRow[xGridIndex] = true;
 		do Screen.setColor(false);
 		return;
 	}
@@ -124,8 +124,8 @@ class Grid {
 		do Screen.drawRectangle(xCoordinate, yCoordinate,
 								xCoordinate + gridBlockWidth - 1,
 								yCoordinate + gridBlockWidth - 1);
-		let xRow = grid[yCoordinate];
-		let xRow[xCoordinate] = true;
+		let xRow = grid[yGridIndex];
+		let xRow[xGridIndex] = false;
 		return;
 	}
 

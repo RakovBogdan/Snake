@@ -45,7 +45,8 @@ class SnakeGame {
 		var boolean exit;
 
 		let exit = false;
-
+        do generateFoodOnGrid();
+        
 		while (~(exit)) {
 			do moveSnake();
 
@@ -68,14 +69,17 @@ class SnakeGame {
 
 	method void generateFoodOnGrid() {
 		var Array foodCoordinates;
+        var SnakePart head;
 		var int numberOfSteps;
-		let numberOfSteps = LCGRandom.randRange(1, grid.getSize() - snake.getLength());
+        
+        let head = snake.getHead();
+		let numberOfSteps = 100;// LCGRandom.randRange(1, grid.getSize() - snake.getLength());
 		
-		let foodCoordinates = grid.getNextBlockAfterSteps(snake.getHead().getXIndex(),
-			snake.getHead().getYIndex(), numberOfSteps);
+		let foodCoordinates = grid.getNextBlockAfterSteps(head.getXIndex(),
+			head.getYIndex(), numberOfSteps);
 
 		if (~(grid.isCoordinateEmpty(foodCoordinates[0], foodCoordinates[1]))) {
-			let foodCoordinates = drawNextEmptyBlock(foodCoordinates[0], foodCoordinates[1]);
+			let foodCoordinates = grid.drawNextEmptyBlock(foodCoordinates[0], foodCoordinates[1]);
 		} else {
 			do grid.drawBlock(foodCoordinates[0], foodCoordinates[1]);
 		}
