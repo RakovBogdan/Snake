@@ -33,10 +33,12 @@ class SnakeGame {
 		let down = 4;
 
 		let snakeLength = 5;
-		let snakeWidth = 8;
+		let snakeWidth = 16;
 		let snake = Snake.new(snakeLength, snakeWidth);
 		let grid = snake.getGrid();
 		let direction = right;
+		
+		do LCGRandom.setSeed(0);
 		return this;
 	} 
 
@@ -48,7 +50,11 @@ class SnakeGame {
         do generateFoodOnGrid();
         
 		while (~(exit)) {
-			do moveSnake();
+			if (checkIfNextBlockIsFood()) {
+				do eatFood();
+			} else {
+				do moveSnake();
+			}
 
 			let currentKeyPressed = Keyboard.keyPressed();
 			if (currentKeyPressed = exitButton) {
@@ -73,7 +79,7 @@ class SnakeGame {
 		var int numberOfSteps;
         
         let head = snake.getHead();
-		let numberOfSteps = 100;// LCGRandom.randRange(1, grid.getSize() - snake.getLength());
+		let numberOfSteps = LCGRandom.randRange(1, grid.getSize() - snake.getLength());
 		
 		let foodCoordinates = grid.getNextBlockAfterSteps(head.getXIndex(),
 			head.getYIndex(), numberOfSteps);
@@ -105,6 +111,24 @@ class SnakeGame {
 		do Sys.wait(100);
 		return;
 	}
+	
+	method void eatFood() {
+		if (direction = left) {
+			do snake.eatLeft();
+		}  
+		if (direction = right) {
+			do snake.eatRight();
+		} 
+		if (direction = up) {
+			do snake.eatUp();
+		}
+		if (direction = down) {
+			do snake.eatDown();
+		}
+		do Sys.wait(100);
+		do generateFoodOnGrid();
+		return;
+	}
 
 	method boolean checkSnakeInGrid() {
 		var SnakePart head;
@@ -130,6 +154,31 @@ class SnakeGame {
 
 		return grid.isCoordinateInGrid(headX, headY);
 	} 
+	
+	method boolean checkIfNextBlockIsFood() {
+		var SnakePart head;
+		var int headX;
+		var int headY;
+
+		let head = snake.getHead();
+		let headX = head.getXIndex();
+		let headY = head.getYIndex();
+		
+		if (direction = right) {
+			let headX = headX + 1;
+		}
+		if (direction = left) {
+			let headX = headX - 1;
+		}
+		if (direction = up) {
+			let headY = headY - 1;
+		}
+		if (direction = down) {
+			let headY = headY + 1;
+		}
+
+		return ((food[0] = headX) & (food[1] = headY));
+	}
 
 	method void readDirection(int currentKeyPressed) {
 		if ((currentKeyPressed = leftButton) & ~(direction = right)) {

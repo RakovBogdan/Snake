@@ -40,6 +40,38 @@ class Snake {
 		return head;
 	}
 
+	method void eatRight() {
+		do head.setNext(SnakePart.new(head.getXIndex() + 1, head.getYIndex()));
+		do grid.drawBlock(head.getXIndex() + 1, head.getYIndex());
+		let head = head.getNext(); 
+		let snakeLength = snakeLength + 1;
+		return;
+	}
+	
+	method void eatLeft() {
+		do head.setNext(SnakePart.new(head.getXIndex() - 1, head.getYIndex()));
+		do grid.drawBlock(head.getXIndex() - 1, head.getYIndex());
+		let head = head.getNext(); 
+		let snakeLength = snakeLength + 1;
+		return;
+	}
+	
+	method void eatUp() {
+		do head.setNext(SnakePart.new(head.getXIndex(), head.getYIndex() - 1));
+		do grid.drawBlock(head.getXIndex(), head.getYIndex() - 1);
+		let head = head.getNext(); 
+		let snakeLength = snakeLength + 1;
+		return;
+	}
+	
+	method void eatDown() {
+		do head.setNext(SnakePart.new(head.getXIndex(), head.getYIndex() + 1));
+		do grid.drawBlock(head.getXIndex(), head.getYIndex() + 1);
+		let head = head.getNext(); 
+		let snakeLength = snakeLength + 1;
+		return;
+	}
+	
 	method void moveRight() {
 		do removeTail();
 		
