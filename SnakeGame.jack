@@ -17,6 +17,22 @@ class SnakeGame {
 	field Grid grid;
 	field Array food;
 
+	function int getLeft() {
+		return left;
+	}
+	
+	function int getRight() {
+		return right;
+	}
+	
+	function int getUp() {
+		return up;
+	}
+	
+	function int getDown() {
+		return down;
+	}
+	
 	constructor SnakeGame new() {
 		var int snakeLength;
 		var int snakeWidth;
@@ -51,9 +67,9 @@ class SnakeGame {
         
 		while (~(exit)) {
 			if (checkIfNextBlockIsFood()) {
-				do eatFood();
+				do eatFood(direction);
 			} else {
-				do moveSnake();
+				do moveSnake(direction);
 			}
 
 			let currentKeyPressed = Keyboard.keyPressed();
@@ -95,36 +111,14 @@ class SnakeGame {
 		return;
 	}
 
-	method void moveSnake() {
-		if (direction = left) {
-			do snake.moveLeft();
-		}  
-		if (direction = right) {
-			do snake.moveRight();
-		} 
-		if (direction = up) {
-			do snake.moveUp();
-		}
-		if (direction = down) {
-			do snake.moveDown();
-		}
+	method void moveSnake(int direction) {
+		do snake.move(direction);
 		do Sys.wait(100);
 		return;
 	}
 	
-	method void eatFood() {
-		if (direction = left) {
-			do snake.eatLeft();
-		}  
-		if (direction = right) {
-			do snake.eatRight();
-		} 
-		if (direction = up) {
-			do snake.eatUp();
-		}
-		if (direction = down) {
-			do snake.eatDown();
-		}
+	method void eatFood(int direction) {
+		do snake.eat(direction);
 		do Sys.wait(100);
 		do generateFoodOnGrid();
 		return;
