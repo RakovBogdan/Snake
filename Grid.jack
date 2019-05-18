@@ -43,6 +43,11 @@ class Grid {
 		return size;
 	}
 
+	method boolean isCoordinateInGrid(int xGridIndex, int yGridIndex) {
+		return ((xGridIndex > (-1)) & (xGridIndex < xGridLength)) &
+		 	   ((yGridIndex > (-1)) & (yGridIndex < yGridLength));
+	}
+
 	method boolean isCoordinateOccupied(int x, int y) {
 		var Array xRow;
 		let xRow = grid[y];
@@ -59,10 +64,10 @@ class Grid {
 		var Array xRow;
 		var Array result;
 
+		let yIndex = y;
+		let xIndex = x + 1;
 		let result = Array.new(2);
 		let xRow = grid[yIndex];
-		let yIndex = y;
-		let xIndex = x;
 
 		while (yIndex < (yGridLength + y)) {
 			while (xIndex < xGridLength) {
@@ -83,21 +88,13 @@ class Grid {
 	}
 
 	method Array getNextBlockAfterSteps(int x, int y, int steps) {
-		var Array xRow;
 		var Array result;
-
 		let result = Array.new(2);
-		let xRow = grid[y];
 		
 		let result[0] = Utils.mod((x + steps), xGridLength);
 		let result[1] = Utils.mod(y + ((x + steps)/xGridLength), yGridLength);
 
 		return result;
-	}
-
-	method boolean isCoordinateInGrid(int xGridIndex, int yGridIndex) {
-		return (xGridIndex > ((-1)) & (xGridIndex < xGridLength) &
-		 		(yGridIndex > ((-1)) & (yGridIndex < yGridLength)));
 	}
 
 	method void drawBlock(int xGridIndex, int yGridIndex) {

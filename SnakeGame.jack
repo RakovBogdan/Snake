@@ -48,6 +48,7 @@ class SnakeGame {
 		let right = 3;
 		let down = 4;
 
+		let snakeLength = 10;
 		let snakeWidth = 16;
 		let snake = Snake.new(snakeLength, snakeWidth);
 		let grid = snake.getGrid();
