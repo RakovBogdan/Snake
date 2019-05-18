@@ -110,7 +110,10 @@ class SnakeGame {
 	}
 
 	method boolean moveSnake() {
-		if (~(snake.checkSnakeNextMoveIsInGrid(direction)) | snake.nextMoveCollides(direction)) {
+		if (~snake.checkSnakeNextMoveIsInGrid(direction)) {
+			return false;
+		}
+		if (snake.nextMoveCollides(direction)) {
 			return false;
 		}
 
