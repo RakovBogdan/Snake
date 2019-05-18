@@ -47,6 +47,7 @@ class Snake {
 	
 		let headX = head.getXIndex();
 		let headY = head.getYIndex();
+		let result = Array.new(2);
 	
 		if (direction = SnakeGame.getRight()) {
 			let headX = headX + 1;
@@ -65,6 +66,18 @@ class Snake {
 		let result[1] = headY;
 		
 		return result;
+	}
+
+	method boolean checkSnakeNextMoveIsInGrid(int direction) {
+		var Array nextCoordinates;
+		let nextCoordinates	= calculateCoordinatesInDirection(direction);
+		return grid.isCoordinateInGrid(nextCoordinates[0], nextCoordinates[1]);
+	}
+
+	method boolean nextMoveCollides(int direction) {
+		var Array nextCoordinates;
+		let nextCoordinates	= calculateCoordinatesInDirection(direction);
+		return grid.isCoordinateOccupied(nextCoordinates[0], nextCoordinates[1]);
 	}
 	
 	method void eat(int direction) {

@@ -43,10 +43,14 @@ class Grid {
 		return size;
 	}
 
-	method boolean isCoordinateEmpty(int x, int y) {
+	method boolean isCoordinateOccupied(int x, int y) {
 		var Array xRow;
 		let xRow = grid[y];
-		return ~(xRow[x]);
+		return xRow[x];
+	}
+
+	method boolean isCoordinateEmpty(int x, int y) {
+		return ~(isCoordinateOccupied(x, y));
 	}
 
 	method Array drawNextEmptyBlock(int x, int y) {

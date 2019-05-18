@@ -48,7 +48,6 @@ class SnakeGame {
 		let right = 3;
 		let down = 4;
 
-		let snakeLength = 5;
 		let snakeWidth = 16;
 		let snake = Snake.new(snakeLength, snakeWidth);
 		let grid = snake.getGrid();
@@ -66,19 +65,17 @@ class SnakeGame {
         do generateFoodOnGrid();
         
 		while (~(exit)) {
-			if (checkIfNextBlockIsFood()) {
-				do eatFood(direction);
-			} else {
-				do moveSnake(direction);
-			}
-
 			let currentKeyPressed = Keyboard.keyPressed();
 			if (currentKeyPressed = exitButton) {
 				let exit = true;
 			}
+
 			do readDirection(currentKeyPressed);
-			if (~(checkSnakeInGrid())) {
-				let exit = true;
+
+			if (checkIfNextBlockIsFood()) {
+				do eatFood();
+			} else {
+				let exit = ~(moveSnake());
 			}
 		}
 
@@ -111,67 +108,28 @@ class SnakeGame {
 		return;
 	}
 
-	method void moveSnake(int direction) {
+	method boolean moveSnake() {
+		if (~(snake.checkSnakeNextMoveIsInGrid(direction)) | snake.nextMoveCollides(direction)) {
+			return false;
+		}
+
 		do snake.move(direction);
 		do Sys.wait(100);
-		return;
+		return true;
 	}
 	
-	method void eatFood(int direction) {
+	method boolean checkIfNextBlockIsFood() {
+		var Array nextCoordinates;
+		let nextCoordinates	= snake.calculateCoordinatesInDirection(direction);
+
+		return ((food[0] = nextCoordinates[0]) & (food[1] = nextCoordinates[1]));
+	}
+
+	method void eatFood() {
 		do snake.eat(direction);
 		do Sys.wait(100);
 		do generateFoodOnGrid();
 		return;
-	}
-
-	method boolean checkSnakeInGrid() {
-		var SnakePart head;
-		var int headX;
-		var int headY;
-
-		let head = snake.getHead();
-		let headX = head.getXIndex();
-		let headY = head.getYIndex();
-		
-		if (direction = right) {
-			let headX = headX + 1;
-		}
-		if (direction = left) {
-			let headX = headX - 1;
-		}
-		if (direction = up) {
-			let headY = headY - 1;
-		}
-		if (direction = down) {
-			let headY = headY + 1;
-		}
-
-		return grid.isCoordinateInGrid(headX, headY);
-	} 
-	
-	method boolean checkIfNextBlockIsFood() {
-		var SnakePart head;
-		var int headX;
-		var int headY;
-
-		let head = snake.getHead();
-		let headX = head.getXIndex();
-		let headY = head.getYIndex();
-		
-		if (direction = right) {
-			let headX = headX + 1;
-		}
-		if (direction = left) {
-			let headX = headX - 1;
-		}
-		if (direction = up) {
-			let headY = headY - 1;
-		}
-		if (direction = down) {
-			let headY = headY + 1;
-		}
-
-		return ((food[0] = headX) & (food[1] = headY));
 	}
 
 	method void readDirection(int currentKeyPressed) {
