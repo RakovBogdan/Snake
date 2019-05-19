@@ -6,6 +6,7 @@ class SnakePart {
 	constructor SnakePart new(int xIndex, int yIndex) {
 		let xGridIndex = xIndex;
 		let yGridIndex = yIndex;
+		let nextPart = null;
 		return this;
 	}
 

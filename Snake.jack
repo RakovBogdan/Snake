@@ -112,10 +112,35 @@ class Snake {
 		return;
 	}
 
+	method void eraseSnakeFromScreen() {
+		var SnakePart partToErase;
+		let partToErase = tail;
+
+		while (~(partToErase = null)) {
+			do grid.eraseBlock(partToErase.getXIndex(), partToErase.getYIndex());
+			let partToErase = partToErase.getNext();
+		}
+
+		return;	
+	}
+
+	method void drawSnakeOnScreen() {
+		var SnakePart partToDraw;
+		let partToDraw = tail;
+
+		while (~(partToDraw = null)) {
+			do grid.drawBlock(partToDraw.getXIndex(), partToDraw.getYIndex());
+			let partToDraw = partToDraw.getNext();
+		}
+		
+		return;	
+	}
+
 	method void dispose() {
 		while (~(tail = null)) {
 			do removeTail();
 		}
+
 		do grid.dispose();
 		do Memory.deAlloc(this);
 		return;

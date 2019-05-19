@@ -1,10 +1,87 @@
 class Main {
 
+	static int exitButton; //'q' button
+	static int restartButton; //'r' button
+
     function void main() {
-	   var SnakeGame game;
-       let game = SnakeGame.new();
-       do game.start();
-       do game.dispose();
-       return;
+		var SnakeGame game;
+		var boolean exit;
+
+		let exitButton = 81;
+		let restartButton = 82;
+		let exit = false;
+
+		while (~(exit)) {
+			do Main.askUserToStartGame();
+			let game = SnakeGame.new();
+			do game.start();
+			do game.dispose();
+			let exit = Main.exitGame();
+			do Screen.clearScreen();
+		}
+
+		return;
     }
+
+    function void askUserToStartGame() {
+    	do Output.moveCursor(11, 0);
+		do Output.printString("Welcome to snake! Press any key to start game!");
+    	do LCGRandom.setSeed(Main.returnRandomSeed());
+    	do Screen.clearScreen();
+    	return;
+    }
+
+    function int returnRandomSeed() {
+    	var int randomSeed;
+    	var int currentKeyPressed;
+
+    	let currentKeyPressed = 0;
+    	let randomSeed = 0;
+    	while (currentKeyPressed = 0) {
+    		let randomSeed = Main.incrementIntNumberCirculary(randomSeed);
+    		let currentKeyPressed = Keyboard.keyPressed();
+    	}
+
+    	while (~(currentKeyPressed = 0)) {	
+    		let randomSeed = Main.incrementIntNumberCirculary(randomSeed);
+    		let currentKeyPressed = Keyboard.keyPressed();
+    	}
+
+    	return randomSeed;
+    }
+
+    function int incrementIntNumberCirculary(int number) {
+    	if (number = 32767) {
+    		let number = 0;
+    	} else {
+    		let number = number + 1;
+    	}
+
+    	return number;
+    }
+
+    function boolean exitGame() {
+    	var int currentKeyPressed;
+    	do Output.println();
+    	do Output.printString("Press R to restart, Q - to exit");
+
+		while (~(currentKeyPressed = exitButton) | ~(currentKeyPressed = restartButton)) {
+			let currentKeyPressed = Keyboard.keyPressed();
+			if (currentKeyPressed = restartButton) {
+				while (~(currentKeyPressed = 0)) {
+					let currentKeyPressed = Keyboard.keyPressed();
+				}
+				
+				return false;
+			}
+			if (currentKeyPressed = exitButton) {
+				while (~(currentKeyPressed = 0)) {
+					let currentKeyPressed = Keyboard.keyPressed();
+				}
+				return true;
+			}
+		}
+		
+		return true;
+	}
 }

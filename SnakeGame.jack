@@ -3,6 +3,7 @@ class SnakeGame {
 	static int xPixelSize;
 	static int yPixelSize;
 	static int exitButton; //'q' button
+	static int restartButton; //'r' button
 	static int leftButton;
 	static int rightButton;
 	static int upButton;
@@ -11,7 +12,8 @@ class SnakeGame {
 	static int right;
 	static int up;
 	static int down;
-
+	
+	field int randomSeed;
 	field Snake snake;
 	field int direction;
 	field Grid grid;
@@ -32,13 +34,14 @@ class SnakeGame {
 	function int getDown() {
 		return down;
 	}
-	
+
 	constructor SnakeGame new() {
 		var int snakeLength;
 		var int snakeWidth;
 		let yPixelSize = 256;
 		let xPixelSize = 512;
 		let exitButton = 81;
+		let restartButton = 82;
 		let leftButton = 130;
 		let upButton = 131;
 		let rightButton = 132;
@@ -53,39 +56,69 @@ class SnakeGame {
 		let snake = Snake.new(snakeLength, snakeWidth);
 		let grid = snake.getGrid();
 		let direction = right;
-		
-		do LCGRandom.setSeed(0);
+
 		return this;
 	} 
 
 	method void start() {
 		var int currentKeyPressed;
-		var boolean exit;
-
-		let exit = false;
-        do generateFoodOnGrid();
-        
-		while (~(exit)) {
+		var boolean gameOver;
+		
+		do generateFoodOnGrid();
+		
+		let gameOver = false;
+		while (~(gameOver)) {
 			let currentKeyPressed = Keyboard.keyPressed();
 			if (currentKeyPressed = exitButton) {
-				let exit = true;
+				let gameOver = true;
 			}
-
 			do readDirection(currentKeyPressed);
 
 			if (checkIfNextBlockIsFood()) {
-				do eatFood();
+				let gameOver = ~(eatFood());
 			} else {
-				let exit = ~(moveSnake());
+				let gameOver = ~(moveSnake());
 			}
 		}
 
-		do Output.moveCursor(11, 0);
-		do Output.printString("Game over, score: ");
-		do Output.printInt(snake.getLength());
+		do processGameOver();
 
 		return;
 	}
+
+	method void processGameOver() {
+		var int currentKeyPressed;
+	
+		do snakeGameOverAnimation();
+		do snake.eraseSnakeFromScreen();
+		do grid.eraseBlock(food[0], food[1]);
+		do printGameOver();
+		
+		return;
+	}
+
+	method void snakeGameOverAnimation() {
+		var int animationCount;
+		let animationCount = 5;
+
+		while (animationCount > 0) {
+			do snake.eraseSnakeFromScreen();	
+			do Sys.wait(300);
+			do snake.drawSnakeOnScreen();
+			do Sys.wait(300);
+			let animationCount = animationCount - 1;
+		}
+
+		return;
+	}
+
+	method void printGameOver() {
+		do Output.moveCursor(11, 0);
+		do Output.printString("Game over, score: ");
+		do Output.printInt(snake.getLength());		
+		return;
+	}
+
 
 	method void generateFoodOnGrid() {
 		var Array foodCoordinates;
@@ -129,11 +162,15 @@ class SnakeGame {
 		return ((food[0] = nextCoordinates[0]) & (food[1] = nextCoordinates[1]));
 	}
 
-	method void eatFood() {
+	method boolean eatFood() {
 		do snake.eat(direction);
+		do food.dispose();
 		do Sys.wait(100);
 		do generateFoodOnGrid();
-		return;
+		if (food = null) {
+			return false;
+		}
+		return true;
 	}
 
 	method void readDirection(int currentKeyPressed) {
@@ -154,6 +191,8 @@ class SnakeGame {
 
 	method void dispose() {
 		do snake.dispose();
+		do grid.dispose();
+		do food.dispose();
 		do Memory.deAlloc(this);
 		return;
 	}
