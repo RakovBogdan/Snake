@@ -86,38 +86,7 @@ class SnakeGame {
 		return;
 	}
 
-	method void processGameOver() {
-		var int currentKeyPressed;
-	
-		do snakeGameOverAnimation();
-		do snake.eraseSnakeFromScreen();
-		do grid.eraseBlock(food[0], food[1]);
-		do printGameOver();
-		
-		return;
-	}
 
-	method void snakeGameOverAnimation() {
-		var int animationCount;
-		let animationCount = 5;
-
-		while (animationCount > 0) {
-			do snake.eraseSnakeFromScreen();	
-			do Sys.wait(300);
-			do snake.drawSnakeOnScreen();
-			do Sys.wait(300);
-			let animationCount = animationCount - 1;
-		}
-
-		return;
-	}
-
-	method void printGameOver() {
-		do Output.moveCursor(11, 0);
-		do Output.printString("Game over, score: ");
-		do Output.printInt(snake.getLength());		
-		return;
-	}
 
 
 	method void generateFoodOnGrid() {
@@ -186,6 +155,39 @@ class SnakeGame {
 		if ((currentKeyPressed = downButton) & ~(direction = up)) {
 			let direction = down;
 		}
+		return;
+	}
+
+		method void processGameOver() {
+		var int currentKeyPressed;
+	
+		do snakeGameOverAnimation();
+		do snake.eraseSnakeFromScreen();
+		do grid.eraseBlock(food[0], food[1]);
+		do printGameOver();
+		
+		return;
+	}
+
+	method void snakeGameOverAnimation() {
+		var int animationCount;
+		let animationCount = 5;
+
+		while (animationCount > 0) {
+			do snake.eraseSnakeFromScreen();	
+			do Sys.wait(300);
+			do snake.drawSnakeOnScreen();
+			do Sys.wait(300);
+			let animationCount = animationCount - 1;
+		}
+
+		return;
+	}
+
+	method void printGameOver() {
+		do Output.moveCursor(11, 0);
+		do Output.printString("Game over, score: ");
+		do Output.printInt(snake.getLength());		
 		return;
 	}
 
