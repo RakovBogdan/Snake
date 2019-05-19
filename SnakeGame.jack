@@ -86,9 +86,6 @@ class SnakeGame {
 		return;
 	}
 
-
-
-
 	method void generateFoodOnGrid() {
 		var Array foodCoordinates;
         var SnakePart head;
