@@ -15,6 +15,7 @@ class SnakeGame {
 	
 	field int randomSeed;
 	field Snake snake;
+	field SnakePart nextSnakePart;
 	field int direction;
 	field Grid grid;
 	field Array food;
@@ -73,6 +74,7 @@ class SnakeGame {
 				let gameOver = true;
 			}
 			do readDirection(currentKeyPressed);
+			let nextSnakePart = snake.createNewSnakePart(direction);
 
 			if (checkIfNextBlockIsFood()) {
 				let gameOver = ~(eatFood());
@@ -109,27 +111,24 @@ class SnakeGame {
 	}
 
 	method boolean moveSnake() {
-		if (~snake.checkSnakeNextMoveIsInGrid(direction)) {
+		if (~grid.isCoordinateInGrid(nextSnakePart.getXIndex(), nextSnakePart.getYIndex())) {
 			return false;
 		}
-		if (snake.nextMoveCollides(direction)) {
+		if (grid.isCoordinateOccupied(nextSnakePart.getXIndex(), nextSnakePart.getYIndex())) {
 			return false;
 		}
 
-		do snake.move(direction);
+		do snake.move(nextSnakePart);
 		do Sys.wait(100);
 		return true;
 	}
-	
-	method boolean checkIfNextBlockIsFood() {
-		var Array nextCoordinates;
-		let nextCoordinates	= snake.calculateCoordinatesInDirection(direction);
 
-		return ((food[0] = nextCoordinates[0]) & (food[1] = nextCoordinates[1]));
+	method boolean checkIfNextBlockIsFood() {
+		return ((food[0] = nextSnakePart.getXIndex()) & (food[1] = nextSnakePart.getYIndex()));
 	}
 
 	method boolean eatFood() {
-		do snake.eat(direction);
+		do snake.eat(nextSnakePart);
 		do food.dispose();
 		do Sys.wait(100);
 		do generateFoodOnGrid();
@@ -155,7 +154,7 @@ class SnakeGame {
 		return;
 	}
 
-		method void processGameOver() {
+	method void processGameOver() {
 		var int currentKeyPressed;
 	
 		do snakeGameOverAnimation();
@@ -192,6 +191,7 @@ class SnakeGame {
 		do snake.dispose();
 		do grid.dispose();
 		do food.dispose();
+		do nextSnakePart.dispose();
 		do Memory.deAlloc(this);
 		return;
 	}
